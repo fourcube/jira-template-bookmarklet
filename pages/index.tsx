@@ -68,6 +68,8 @@ const App = observer((props: { ui: UiState }) => {
 
           <div className={styles.buttonWrapper}>
             <a
+              target="_blank"
+              rel="noopener noreferrer"
               className={`${styles.button} ${
                 !ui.config.jiraBaseUrl || !activeEditor ? styles.disabled : ""
               }`}
