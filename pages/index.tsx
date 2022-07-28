@@ -1,36 +1,46 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { defaultTemplate } from "../data/defaultTemplate";
-import { createBookmarklet } from "../lib/bookmarklet";
-import { useRef, useState } from "react";
+import { createBookmarklet, createBookmarkletHacky } from "../lib/bookmarklet";
+import styles from "../styles/Home.module.css";
 
 enum ButtonTexts {
   COPIED = "Copied!",
   INITIAL = "Copy Bookmarklet",
+  INITIAL_HACKY = "Copy Bookmarklet (hacky)",
 }
 
 const Home: NextPage = () => {
   const timeoutRef = useRef<any>();
   const [buttonText, setButtonText] = useState(ButtonTexts.INITIAL);
+  const [hackyButtonText, setHackyButtonText] = useState(
+    ButtonTexts.INITIAL_HACKY
+  );
   const [template, setTemplate] = useState(defaultTemplate);
 
-  function toggleButton() {
-    navigator.clipboard.writeText(createBookmarklet(template)).then(
-      function () {
-        setButtonText(ButtonTexts.COPIED);
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
+  function toggleButton(
+    bookmarkletFn: (x: string) => string,
+    setTextFn: Dispatch<SetStateAction<ButtonTexts>>,
+    initialText: ButtonTexts
+  ) {
+    return () => {
+      navigator.clipboard.writeText(bookmarkletFn(template)).then(
+        function () {
+          setTextFn(ButtonTexts.COPIED);
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+          }
 
-        timeoutRef.current = setTimeout(() => {
-          setButtonText(ButtonTexts.INITIAL);
-        }, 1000);
-      },
-      function (err) {
-        console.error("Failed to copy!", err);
-      }
-    );
+          timeoutRef.current = setTimeout(() => {
+            setTextFn(initialText);
+          }, 1000);
+        },
+        function (err) {
+          console.error("Failed to copy!", err);
+        }
+      );
+    };
   }
 
   return (
@@ -60,8 +70,25 @@ const Home: NextPage = () => {
             ></textarea>
 
             <div className={styles.buttonWrapper}>
-              <button onClick={toggleButton} className={styles.button}>
+              <button
+                onClick={toggleButton(
+                  createBookmarklet,
+                  setButtonText,
+                  ButtonTexts.INITIAL
+                )}
+                className={styles.button}
+              >
                 {buttonText}
+              </button>
+              <button
+                onClick={toggleButton(
+                  createBookmarkletHacky,
+                  setHackyButtonText,
+                  ButtonTexts.INITIAL_HACKY
+                )}
+                className={styles.button}
+              >
+                {hackyButtonText}
               </button>
             </div>
           </div>
