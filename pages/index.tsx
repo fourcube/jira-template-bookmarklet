@@ -57,8 +57,7 @@ const App = observer((props: { ui: UiState }) => {
     <main className={styles.main}>
       <div className={styles.container}>
         <p className={styles.p}>
-          Create a bookmarklet that pastes the following template into the issue
-          description in Jira.
+          Create Jira issues with a description template.
         </p>
 
         <div className={styles.templateEditor}>
