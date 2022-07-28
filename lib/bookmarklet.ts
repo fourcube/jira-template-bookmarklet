@@ -1,3 +1,8 @@
+export function createIssueURL(baseUrl: string, text: string, projectId: string, issueType: string) {
+  return `${baseUrl}/secure/CreateIssueDetails!init.jspa?pid=${projectId}&issuetype=${issueType}&description=${encodeURIComponent(
+    text
+  )}`;
+}
 export function createBookmarklet(text: string) {
   const template = `
     window.location.href='/secure/CreateIssueDetails!init.jspa?pid=' + JIRA.API.Projects.getCurrentProjectId() + '&issuetype=10001&description=${encodeURIComponent(

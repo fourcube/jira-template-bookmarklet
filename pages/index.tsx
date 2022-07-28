@@ -1,8 +1,16 @@
+import { observer } from "mobx-react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Editor } from "../components/editor";
+import { Navigation } from "../components/navigation";
 import { defaultTemplate } from "../data/defaultTemplate";
-import { createBookmarklet, createBookmarkletHacky } from "../lib/bookmarklet";
+import {
+  createBookmarklet,
+  createBookmarkletHacky,
+  createIssueURL,
+} from "../lib/bookmarklet";
+import { ui, UiState } from "../state/ui.state";
 import styles from "../styles/Home.module.css";
 
 enum ButtonTexts {
@@ -11,7 +19,7 @@ enum ButtonTexts {
   INITIAL_HACKY = "Copy Bookmarklet (hacky)",
 }
 
-const Home: NextPage = () => {
+const App = observer((props: { ui: UiState }) => {
   const timeoutRef = useRef<any>();
   const [buttonText, setButtonText] = useState(ButtonTexts.INITIAL);
   const [hackyButtonText, setHackyButtonText] = useState(
@@ -43,6 +51,43 @@ const Home: NextPage = () => {
     };
   }
 
+  const activeEditor = ui.getActiveEditor();
+
+  return (
+    <main className={styles.main}>
+      <div className={styles.container}>
+        <p className={styles.p}>
+          Create a bookmarklet that pastes the following template into the issue
+          description in Jira.
+        </p>
+
+        <div className={styles.templateEditor}>
+          <Navigation ui={ui}></Navigation>
+
+          <Editor ui={ui}></Editor>
+
+          <div className={styles.buttonWrapper}>
+            <a
+              className={`${styles.button} ${
+                !ui.config.jiraBaseUrl || !activeEditor ? styles.disabled : ""
+              }`}
+              href={createIssueURL(
+                ui.config.jiraBaseUrl,
+                activeEditor?.template || "",
+                ui.config.projectId,
+                ui.config.issueType
+              )}
+            >
+              Create Issue
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+});
+
+const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
@@ -51,49 +96,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <div className={styles.container}>
-          <p className={styles.p}>
-            Create a bookmarklet that pastes the following template into the
-            issue description in Jira.
-          </p>
-
-          <div className={styles.templateEditor}>
-            <ul className={styles.tabs}>
-              <li className={styles.tab}>Template</li>
-            </ul>
-            <textarea
-              className={styles.template}
-              rows={30}
-              value={template}
-              onChange={(e) => setTemplate(e.target.value)}
-            ></textarea>
-
-            <div className={styles.buttonWrapper}>
-              <button
-                onClick={toggleButton(
-                  createBookmarklet,
-                  setButtonText,
-                  ButtonTexts.INITIAL
-                )}
-                className={styles.button}
-              >
-                {buttonText}
-              </button>
-              <button
-                onClick={toggleButton(
-                  createBookmarkletHacky,
-                  setHackyButtonText,
-                  ButtonTexts.INITIAL_HACKY
-                )}
-                className={styles.button}
-              >
-                {hackyButtonText}
-              </button>
-            </div>
-          </div>
-        </div>
-      </main>
+      <App ui={ui}></App>
     </div>
   );
 };

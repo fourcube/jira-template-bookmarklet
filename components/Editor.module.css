@@ -1,0 +1,13 @@
+.editor {
+  height: 60vh;
+  border-radius: 10px;
+  border: 10px solid white;
+  z-index: 1;
+  position: relative;
+  width: 100%;
+  background: white;
+}
+
+.template {
+  outline: none;
+}

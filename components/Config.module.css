@@ -1,0 +1,7 @@
+.config label {
+    display: block;
+}
+
+.config label + label {
+    margin-top: 0.75rem;
+}
