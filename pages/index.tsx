@@ -1,56 +1,15 @@
 import { observer } from "mobx-react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { Editor } from "../components/editor";
 import { Navigation } from "../components/navigation";
-import { defaultTemplate } from "../data/defaultTemplate";
 import {
-  createBookmarklet,
-  createBookmarkletHacky,
-  createIssueURL,
-} from "../lib/bookmarklet";
+  createIssueURL
+} from "../lib/jira";
 import { ui, UiState } from "../state/ui.state";
 import styles from "../styles/Home.module.css";
 
-enum ButtonTexts {
-  COPIED = "Copied!",
-  INITIAL = "Copy Bookmarklet",
-  INITIAL_HACKY = "Copy Bookmarklet (hacky)",
-}
-
-const App = observer((props: { ui: UiState }) => {
-  const timeoutRef = useRef<any>();
-  const [buttonText, setButtonText] = useState(ButtonTexts.INITIAL);
-  const [hackyButtonText, setHackyButtonText] = useState(
-    ButtonTexts.INITIAL_HACKY
-  );
-  const [template, setTemplate] = useState(defaultTemplate);
-
-  function toggleButton(
-    bookmarkletFn: (x: string) => string,
-    setTextFn: Dispatch<SetStateAction<ButtonTexts>>,
-    initialText: ButtonTexts
-  ) {
-    return () => {
-      navigator.clipboard.writeText(bookmarkletFn(template)).then(
-        function () {
-          setTextFn(ButtonTexts.COPIED);
-          if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-          }
-
-          timeoutRef.current = setTimeout(() => {
-            setTextFn(initialText);
-          }, 1000);
-        },
-        function (err) {
-          console.error("Failed to copy!", err);
-        }
-      );
-    };
-  }
-
+const App = observer((_: { ui: UiState }) => {
   const activeEditor = ui.getActiveEditor();
 
   return (
