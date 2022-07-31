@@ -1,47 +1,59 @@
+import { autorun } from "mobx";
 import { observer } from "mobx-react";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useEffect } from "react";
+import ConditionallyRender from "../components/conditionally-render";
 import { Editor } from "../components/editor";
 import { Navigation } from "../components/navigation";
-import {
-  createIssueURL
-} from "../lib/jira";
+import { createIssueURL } from "../lib/jira";
 import { ui, UiState } from "../state/ui.state";
 import styles from "../styles/Home.module.css";
 
 const App = observer((_: { ui: UiState }) => {
   const activeEditor = ui.getActiveEditor();
 
+  useEffect(() =>
+    autorun(() => {
+      localStorage.setItem(
+        "jira-template-state",
+        JSON.stringify(ui.serialize())
+      );
+    })
+  );
+
   return (
-    <main className={styles.main}>
+    <main suppressHydrationWarning className={styles.main}>
       <div className={styles.container}>
         <p className={styles.p}>
           Create Jira issues with a description template.
         </p>
 
-        <div className={styles.templateEditor}>
-          <Navigation ui={ui}></Navigation>
+        <ConditionallyRender client>
+          <div className={styles.templateEditor}>
+            <Navigation ui={ui}></Navigation>
 
-          <Editor ui={ui}></Editor>
+            <Editor ui={ui}></Editor>
 
-          <div className={styles.buttonWrapper}>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${styles.button} ${
-                !ui.config.jiraBaseUrl || !activeEditor ? styles.disabled : ""
-              }`}
-              href={createIssueURL(
-                ui.config.jiraBaseUrl,
-                activeEditor?.template || "",
-                ui.config.projectId,
-                ui.config.issueType
-              )}
-            >
-              Create Issue
-            </a>
+            <div className={styles.buttonWrapper}>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.button} ${
+                  !ui.config.jiraBaseUrl || !activeEditor ? styles.disabled : ""
+                }`}
+                href={createIssueURL(
+                  ui.config.jiraBaseUrl,
+                  activeEditor?.template || "",
+                  ui.config.projectId,
+                  ui.config.issueType
+                )}
+              >
+                Create Issue
+              </a>
+            </div>
           </div>
-        </div>
+        </ConditionallyRender>
       </div>
     </main>
   );

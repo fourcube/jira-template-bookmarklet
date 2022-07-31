@@ -1,4 +1,4 @@
-export const defaultTemplate = `h2. 😊 User Story
+export const storyTemplate = `h2. 😊 User Story
 ----
  
 *As a* ...
@@ -42,3 +42,9 @@ h2. 🖌️ -UX Design-
  
 h2. 💻 -Dev Notes-
 ----`;
+
+export const taskTemplate = `h2. ⚛️ Title
+----
+
+*Implement* ...
+*So that* ...`;

@@ -26,16 +26,43 @@
   transition: height 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+.tab + .tab {
+  margin-left: 0.5rem;
+}
+
 .tabs {
   display: flex;
   position: relative;
   bottom: -8px;
 }
 
-.isConfig {
+.tabEdit {
+  border: none;
+}
+
+.tab.isConfig {
   margin-left: auto;
 }
 
 .isActive::after {
   height: 6px;
+}
+
+.addTab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.addTab button {
+  margin-bottom: 0px;
+  font-size: 22px;
+  padding: 8px 12px;
+  position: relative;
+  top: -6px;
+  cursor: pointer;
+  
+  border: none;
+  background: none;
+  color: white;
 }

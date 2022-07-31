@@ -11,3 +11,19 @@
 .template {
   outline: none;
 }
+
+.editorWrapper {
+  position: relative;
+}
+
+.deleteTemplate {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  background: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border: 1px solid red;
+  border-radius: 5px;
+}
