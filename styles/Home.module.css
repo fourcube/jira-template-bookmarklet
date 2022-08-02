@@ -14,7 +14,6 @@
 .button {
   display: block;
   text-align: center;
-  margin-top: 1rem;
   padding: 0.5rem;
   color: white;
   background: transparent;
@@ -53,6 +52,25 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.buttonWrapper {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.buttonWrapper select {
+  color: white;
+  background: none;
+  font-size: 24px;
+  border: none;
+  margin-left: 0.5rem;
+}
+
+.buttonWrapper select:disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 @media (min-width: 1024px) {

@@ -1,19 +1,24 @@
 import { makeAutoObservable } from "mobx";
 
+export const defaultIssueTypes = {
+  Story: "10001",
+  Task: "10002",
+  Bug: "10100",
+};
 export class ConfigState {
   _jiraBaseUrl = "https://jira.porsche.codes";
   _projectId = "13400";
-  _issueType = "10001";
+  _issueTypes: { [key: string]: string } = defaultIssueTypes;
 
   // TODO: remove defaults
   constructor(
     jiraBaseUrl: string = "https://jira.porsche.codes",
     projectId: string = "13400",
-    issueType: string = "10001"
+    issueTypes: { [key: string]: string } = defaultIssueTypes
   ) {
     this.jiraBaseUrl = jiraBaseUrl;
     this.projectId = projectId;
-    this.issueType = issueType;
+    this._issueTypes = issueTypes;
 
     makeAutoObservable(this);
   }
@@ -26,8 +31,8 @@ export class ConfigState {
     return this._projectId;
   }
 
-  get issueType() {
-    return this._issueType;
+  get issueTypes() {
+    return this._issueTypes;
   }
 
   set jiraBaseUrl(x) {
@@ -38,19 +43,15 @@ export class ConfigState {
     this._projectId = x;
   }
 
-  set issueType(x) {
-    this._issueType = x;
-  }
-
   public static deserialize(obj: ConfigState): ConfigState {
-    return new ConfigState(obj.jiraBaseUrl, obj.projectId, obj.issueType);
+    return new ConfigState(obj.jiraBaseUrl, obj.projectId, obj.issueTypes);
   }
 
   public serialize() {
     return {
       jiraBaseUrl: this.jiraBaseUrl,
       projectId: this.projectId,
-      issueType: this.issueType,
+      issueTypes: this.issueTypes,
     };
   }
 }

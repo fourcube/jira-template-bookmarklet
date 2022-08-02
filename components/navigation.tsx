@@ -60,16 +60,26 @@ export const Navigation = observer((props: { ui: UiState }) => {
         ></Tab>
       );
     }),
-    <div key="add" className={styles.addTab}>
-      {ui.editors.length < 5 && <button onClick={() => ui.createEditor()}>+</button>}
-    </div>,
-    <Tab
-      key={"config"}
-      ui={ui}
-      id={"config"}
-      title="⚙️"
-      className={styles.isConfig}
-    ></Tab>,
+    <li key="add" className={styles.addTab}>
+      {ui.editors.length < 10 && (
+        <button onClick={() => ui.createEditor()}>+</button>
+      )}
+    </li>,
   ];
-  return <ul className={styles.tabs}>{tabs}</ul>;
+  return (
+    <div className={styles.tabContainer}>
+      <div className={styles.scrollableTabs}>
+        <ul className={styles.tabs}>{tabs}</ul>
+      </div>
+      <ul className={styles.tabs}>
+        <Tab
+          key={"config"}
+          ui={ui}
+          id={"config"}
+          title="⚙️"
+          className={styles.isConfig}
+        ></Tab>
+      </ul>
+    </div>
+  );
 });

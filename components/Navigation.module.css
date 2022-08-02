@@ -30,10 +30,23 @@
   margin-left: 0.5rem;
 }
 
-.tabs {
+.tabContainer {
   display: flex;
   position: relative;
   bottom: -8px;
+}
+
+.scrollableTabs {
+  width: 100%;
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.tabs {
+  display: flex;
+  position: relative;
+  width: auto;
+  height: 45px;
 }
 
 .tabEdit {
@@ -41,7 +54,12 @@
 }
 
 .tab.isConfig {
-  margin-left: auto;
+  margin-left: 0.75rem;
+  background: none;
+}
+
+.tab.isConfig::after {
+  content: none;
 }
 
 .isActive::after {

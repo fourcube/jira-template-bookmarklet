@@ -46,11 +46,27 @@ const App = observer((_: { ui: UiState }) => {
                   ui.config.jiraBaseUrl,
                   activeEditor?.template || "",
                   ui.config.projectId,
-                  ui.config.issueType
+                  activeEditor?.selectedIssueType || ""
                 )}
               >
-                Create Issue
+                Create {activeEditor?.selectedIssueTypeName}
               </a>
+
+              <select
+                disabled={!ui.config.jiraBaseUrl || !activeEditor}
+                value={activeEditor?.selectedIssueType}
+                onChange={(e) =>
+                  (activeEditor!.selectedIssueType = e.target.value)
+                }
+              >
+                {Object.entries(ui.config.issueTypes).map(([key, value]) => {
+                  return (
+                    <option key={key} value={value}>
+                      {key}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
           </div>
         </ConditionallyRender>
